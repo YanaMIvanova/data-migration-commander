@@ -1,36 +1,28 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 
-const baseURL = "http://localhost:6000/usernames";
+const baseUrl = "https://www.cep.vd.ch";
 
-const fetchUsers = (usersCount) => {
-  const urlParam = usersCount ? `/${usersCount}` : "";
-  const URL = `${baseURL}${urlParam}`;
+const fetchArticles = (articlesCount) => {
+  console.log(articlesCount);
+  const urlParam = `/cep/api_med.xsp/outil?key=Art&max=${articlesCount}&v=479400`;
+  const url = `${baseUrl}${urlParam}`;
 
-  fetch(URL)
+  fetch(url)
     .then((res) => res.json())
+    .then(console.log)
     .catch(console.log);
 };
 
-const loadUsers = () => {
-  fs.readFile("users.json", (err, data) => {
-    if (err) throw err;
+const fetchUsers = (withToken) => {
+  const baseUrl = "https://www.cep-dev.ch/apiv2/user";
+  const urlParam = "?apitoken=f5e06c7dbf502cd885ec501579ef3f9094b3";
+  const url = withToken ? `${baseUrl}${urlParam}` : baseUrl;
 
-    const users = JSON.parse(data);
-    const otherParams = {
-      body: JSON.stringify(users),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    fetch(baseURL, otherParams)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("res", res);
-      })
-      .catch(console.log);
-  });
+  fetch(url)
+    .then((res) => res.json())
+    .then(console.log)
+    .catch(console.log);
 };
 
-module.exports = { fetchUsers, loadUsers };
+module.exports = { fetchArticles, fetchUsers };

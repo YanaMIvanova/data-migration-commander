@@ -1,13 +1,16 @@
 const { Command } = require("commander");
-const { fetchUsers, loadUsers } = require("./server");
+const { fetchArticles, fetchUsers } = require("./server");
 
 const program = new Command();
 
 program
   .version("0.0.1")
-  .option("-c, --users-count <count>", "the names count to retrieve")
-  .option("-l, --load-users", "load users to the database")
-  .parse();
+  .option("-c, --articles <count>", "how many articles to retrieve")
+  .option("-u, --users", "fetch users");
 
-program.usersCount ? fetchUsers(program.usersCount) : fetchUsers();
-program.loadUsers && loadUsers();
+program.parse(process.argv);
+
+const options = program.opts();
+
+if (options.articles) fetchArticles(options.articles);
+if (options.users) fetchUsers(options.users);
